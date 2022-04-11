@@ -89,3 +89,33 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int
+sys_mprotect(void)
+{
+  cprintf("Point A\n");
+  int addressI;
+  int length;
+
+  if(argint(0, &addressI) < 0 || argint(1, &length) < 0){
+    return -1;
+  }
+  void* address = (void*) addressI;
+  cprintf("\n the address at sys level is = %d \n", address);
+  cprintf("the length at sys level is =  %d \n", length);
+
+  return mprotect (address, length);
+
+}
+
+int
+sys_munprotect(void)
+{
+  int addressI;
+  int length;
+  if(argint(0, &addressI) < 0 || argint(1, &length) < 0){
+    return -1;
+  }
+  void* address = (void*) addressI;
+  return munprotect (address, length);
+}
