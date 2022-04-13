@@ -93,7 +93,7 @@ sys_uptime(void)
 int
 sys_mprotect(void)
 {
-  cprintf("Point A\n");
+  //cprintf("Point A\n");
   int addressI;
   int length;
 
@@ -101,8 +101,8 @@ sys_mprotect(void)
     return -1;
   }
   void* address = (void*) addressI;
-  cprintf("\n the address at sys level is = %d \n", address);
-  cprintf("the length at sys level is =  %d \n", length);
+  //cprintf("\n the address at sys level is = %d \n", address);
+  //cprintf("the length at sys level is =  %d \n", length);
 
   return mprotect (address, length);
 

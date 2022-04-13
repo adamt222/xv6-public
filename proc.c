@@ -558,37 +558,50 @@ walkpgdir(pde_t *pgdir, const void *va, int alloc)
   return &pgtab[PTX(va)];
 }
 
+/*
+*  This function will start at page table entry corresponding to adrr, and set the next len pages to
+*  no longer be writable.
+*/
 int
 mprotect(void *addr, int len)
 {
-  // cprintf("The address chosen is = %d", addr);
-  // cprintf("The length chosen is = %d", len);
+  if (len < 1 || (int)addr + (len*PGSIZE) > myproc()->vlimit || (int)addr < myproc()->vbase){
+    return -1;
+  }
+  int counter = 0;
   pte_t *pte;
 
-  pte = walkpgdir(myproc()->pgdir, addr, 0);
+  while(counter < len){
+  pte = walkpgdir(myproc()->pgdir, addr + (counter*PGSIZE), 0);
   if(pte == 0)
     panic("address not valid!");
-  cprintf("Before = %x", *pte);
   *pte &= ~PTE_W;
-  cprintf("After = %x", *pte);
-
+  counter++;
+  }
   lcr3(V2P(myproc()->pgdir));
-  cprintf("\nThe promised land\n");
   return 0;
 }
 
+/*
+*  This function will start at page table entry corresponding to adrr, and set the next len pages to
+*  be writable.
+*/
 int
 munprotect(void *addr, int len)
 {
-  cprintf("The address chosen is = %d", addr);
-  cprintf("The length chosen is = %d", len);
+  if (len < 1 || (int)addr + (len*PGSIZE) > myproc()->vlimit || (int)addr < myproc()->vbase){
+    return -1;
+  }
+  int counter = 0;
   pte_t *pte;
-  pte = walkpgdir(myproc()->pgdir, addr, 0);
+
+  while(counter < len){
+  pte = walkpgdir(myproc()->pgdir, addr + (counter*PGSIZE), 0);
   if(pte == 0)
     panic("address not valid!");
-  cprintf("Before = %x", *pte);
   *pte |= PTE_W;
-  cprintf("After = %x", *pte);
+  counter++;
+  }
 
   lcr3(V2P(myproc()->pgdir));
 

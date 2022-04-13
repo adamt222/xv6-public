@@ -20,6 +20,6 @@ main(int argc, char *argv[])
   // printf(1,"length arg is= %d \n", length);
   mprotect(address, length);
   //*address = 10;
-  printf(1, "\nAll Done!\n");
+  //printf(1, "\nAll Done!\n");
   exit();
 }
